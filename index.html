@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>English Games</title>
+</head>
+<body>
+    <div class="p-10">
+        <div>
+            <h1 class="text-2xl font-bold text-center">English Games - Guess the Picture</h1>
+        </div>
+        <div>
+            <img src="strawberry.png" alt="" width="250" height="250" class="mx-auto">
+        </div>
+        <div>
+            <div id="scrambledLetters" class="w-fit mx-auto text-3xl font-semibold space-x-5 py-10 cursor-pointer"></div>
+        </div>
+        <div>
+            <form class="w-full max-w-lg mx-auto">
+                <div class="flex items-center border-b border-black py-2">
+                  <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" id="userInput" placeholder="Enter your word" readonly>
+                  <button class="bg-green-500 hover:bg-green-700 border-green-500 hover:border-green-700 text-sm border-4 text-white py-1 px-2 mr-1 rounded" type="button" onclick="checkAnswer()">
+                    Submit
+                  </button>
+                  <button class="bg-red-500 hover:bg-red-700 border-red-500 hover:border-red-700 text-sm border-4 text-white py-1 px-2 rounded" type="button" onclick="clearInput()">
+                    Clear
+                  </button>
+                </div>
+            </form>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const correctWord = "strawberry";
+        const scrambledWord = "wsterabrry".split('');
+        const scrambledLettersContainer = document.getElementById('scrambledLetters');
+        const userInputField = document.getElementById('userInput');
+        const resultContainer = document.getElementById('result');
+        let userAnswer = "";
+
+        function displayScrambledLetters() {
+            scrambledLettersContainer.innerHTML = "";
+            scrambledWord.forEach((letter, index) => {
+                const letterElement = document.createElement('span');
+                letterElement.textContent = letter;
+                letterElement.onclick = () => selectLetter(index);
+                scrambledLettersContainer.appendChild(letterElement);
+            });
+        }
+
+        function selectLetter(index) {
+            const letter = scrambledWord[index];
+            userAnswer += letter;
+            userInputField.value = userAnswer;
+            
+            scrambledLettersContainer.children[index].style.pointerEvents = 'none';
+            scrambledLettersContainer.children[index].style.backgroundColor = '#ccc';
+        }
+
+        function checkAnswer() {
+            resultContainer.innerHTML = "";
+            if (userAnswer === correctWord) {
+                resultContainer.innerHTML = `
+                    <div class="flex items-center mx-auto w-fit max-w-xs p-4 my-4 text-green-600 bg-green-100 rounded-lg shadow">
+                        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-200 rounded-lg">
+                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
+                            </svg>
+                        </div>
+                        <div class="ms-3 text-sm font-normal">Correct! Well done!</div>
+                    </div>
+                `;
+            } else {
+                resultContainer.innerHTML = `
+                    <div class="flex items-center mx-auto w-fit max-w-xs p-4 my-4 text-red-600 bg-red-100 rounded-lg shadow">
+                        <div class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-200 rounded-lg">
+                            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z"/>
+                            </svg>
+                        </div>
+                        <div class="ms-3 text-sm font-normal">Try again!</div>
+                    </div>
+                `;
+            }
+        }
+
+        function clearInput() {
+            userAnswer = "";
+            userInputField.value = "";
+            document.getElementById('result').textContent = "";
+            displayScrambledLetters();
+        }
+
+        displayScrambledLetters();
+    </script>
+</body>
+</html>
